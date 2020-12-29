@@ -9,4 +9,4 @@ li_ads_2d.csv: training set information. The first column is the work function f
 
 results_high_throughput.csv: high-throughput results from the physics-driven models. The first column is the ID from the database built by Jain et al., the second column is the work function from DFT, the third and fourth column is the Li adsorption energy from equation 3 and equation 7, respectively.
 
-best_st.
+best_st.zip: structures of the found high-voltage materials with adsorbed Li from DFT.
