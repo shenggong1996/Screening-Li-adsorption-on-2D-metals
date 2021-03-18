@@ -14,3 +14,5 @@ best_st.zip: structures of the found high-voltage materials with adsorbed Li fro
 uncertainty.py: code for selecting most uncertain samples from a set of possible samples.
 
 randomPoints.py: code for randomly sampling Li adsorption sites.
+
+Note that the codes are still under cleaning.
