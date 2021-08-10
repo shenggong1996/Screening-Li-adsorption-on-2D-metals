@@ -9,35 +9,6 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.analyzer import SpacegroupOperations
 from pymatgen.core.operations import SymmOp
 
-def writeStructure(x,y,z,i,j,title,scale,a,b,c,at_labels,ats,ntot,pos,fft):
-    print ('%s'%(title), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('%f'%(scale), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('%f %f %f'%(a[0],a[1],a[2]),file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('%f %f %f'%(b[0],b[1],b[2]),file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('%f %f %f'%(c[0],c[1],c[2]),file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    nElements = len(ats)
-    if nElements==1:
-        print ('%s Li'%(at_labels[0]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-        print ('%d 1'%(ats[0]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    elif nElements==2:
-        print ('%s %s Li'%(at_labels[0],at_labels[1]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-        print ('%d %d 1'%(ats[0],ats[1]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    elif nElements==3:
-        print ('%s %s %s Li'%(at_labels[0],at_labels[1],at_labels[2]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-        print ('%d %d %d 1'%(ats[0],ats[1],ats[2]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    elif nElements==4:
-        print ('%s %s %s %s Li'%(at_labels[0],at_labels[1],at_labels[2],at_labels[3]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-        print ('%d %d %d %d 1'%(ats[0],ats[1],ats[2],ats[3]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    elif nElements==5:
-        print ('%s %s %s %s %s Li'%(at_labels[0],at_labels[1],at_labels[2],at_labels[3],at_labels[4]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-        print ('%d %d %d %d %d 1'%(ats[0],ats[1],ats[2],ats[3],ats[4]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('Selective', file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('Direct', file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    for m in range(ntot):
-        print ('%f %f %f F F F'%(pos[m][0],pos[m][1],pos[m][2]), file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    print ('%f %f %f T T T'%(float(x/fft[0]),float(y/fft[1]),float(z/fft[2])),file=open('POSCAR_%s_%s'%(str(i),str(j)),'a'))
-    return()
-
 def distance(x1,y1,z1,x2,y2,z2,scale,a,b,c):
     i=((x1-x2)*a[0]+(y1-y2)*b[0]+(z1-z2)*c[0])
     j=((x1-x2)*a[1]+(y1-y2)*b[1]+(z1-z2)*c[1])
@@ -46,61 +17,13 @@ def distance(x1,y1,z1,x2,y2,z2,scale,a,b,c):
     return (dist)
 
 def checkDistance(x,y,z,pos,R,scale,a,b,c):
+    trans = [0,1,-1]
     for i in pos:
-        if distance(x,y,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y+1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y-1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y+1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y+1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y-1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y+1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y+1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y-1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y-1,z,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x,y-1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y+1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y+1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y-1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y+1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y-1,z+1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y+1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x+1,y-1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
-        if distance(x-1,y-1,z-1,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
-            return (1)
+        for tx in trans:
+            for ty in trans:
+                for tz in trans:
+                    if distance(x+tx,y+ty,z+tz,float(i[0]),float(i[1]),float(i[2]),scale,a,b,c)<R:
+                        return (1)
     return (0)
 
 def checkSymmetry(x,y,z,Structures,symmops,a,b,c):
@@ -129,18 +52,10 @@ Symmetry=SpacegroupAnalyzer(structure, symprec=0.01, angle_tolerance=5)
 symmops=Symmetry.get_symmetry_operations(cartesian=True)
 '''
 
-converged = []
-f=open('workfunction.csv')
-for i in range(189):
-    ID, wf = f.readline().split(',')
-    converged.append(int(ID))
-f.close()
 
 nli = 0
 for i in range(7737):
     if not os.path.isfile("select/%d"%(i)):
-        continue
-    if i not in converged:
         continue
     poscar = Poscar.from_file("select/%d"%(i))
     structure = poscar.structure
@@ -187,11 +102,10 @@ for i in range(7737):
     for j in fft:
         npoints*=j#get total number of grids
 
-    nStructures = 10#number of structures to generate
+    nStructures = 50#number of structures to generate
 
     Structures=[]
-    rC=0.0
-    rHe=1.5
+    rClose=2
     rFar = 5
     j=0
     rp = 0
@@ -200,7 +114,7 @@ for i in range(7737):
         x=random.randint(1,fft[0])
         y=random.randint(1,fft[1])
         z=random.randint(1,fft[2])
-        if checkDistance(x/fft[0],y/fft[1],z/fft[2],pos,rC+rHe,scale,a,b,c):
+        if checkDistance(x/fft[0],y/fft[1],z/fft[2],pos,rClose,scale,a,b,c):
             rp+=1
             if rp > 500:
                 break
@@ -218,10 +132,8 @@ for i in range(7737):
         j += 1
         inserted_structure = structure.copy()
         inserted_structure.append("Li", [x/fft[0],y/fft[1],z/fft[2]])
-#        inserted_structure.to(filename = 'converged/%s'%(str(i)), fmt='poscar')
         inserted_structure.to(filename = '4/%s_%s'%(str(i),str(j)), fmt='poscar')
         Structures.append([x/fft[0],y/fft[1],z/fft[2]])#record already selected points
-#        writeStructure(x,y,z,i,j,title,scale,a,b,c,at_labels,ats,ntot,pos,fft)
         print ('%d, %d'%(i, j))
         nli += 1
 
